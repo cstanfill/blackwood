@@ -1,6 +1,6 @@
-module Bidding where
+module Blackwood.Bidding where
 import Control.Monad.Error
-import Bridge
+import Blackwood.Bridge
 
 data BiddingError = DoublingError String | TooLowError Contract' Contract' | OtherError String
 

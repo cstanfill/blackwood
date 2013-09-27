@@ -1,11 +1,11 @@
-module Bridge where
+module Blackwood.Bridge where
 import Data.Either
 import Data.List
 import System.Random
 
 -- These datatypes implement Ord in the correct order for comparisons later.  Do not rearrange!
 data Partnership = NS | EW deriving (Eq, Show)
-data Player = North | East | South | West deriving (Eq, Show)
+data Player = North | East | South | West deriving (Eq, Show, Read)
 data Suit = Clubs | Diamonds | Hearts | Spades deriving (Eq, Show, Ord, Enum)
 data Trump = Trump Suit | NoTrump deriving (Eq, Show, Ord)
 data Tricks = T1 | T2 | T3 | T4 | T5 | T6 | T7 deriving (Eq, Show, Ord)
@@ -78,3 +78,9 @@ partner p = case p of
 
 deck :: [Card]
 deck = enumFrom (Card V2 Clubs)
+
+getHand :: Player -> Board -> Hand
+getHand North (Hands n _ _ _) = n
+getHand East  (Hands _ e _ _) = e
+getHand South (Hands _ _ s _) = s
+getHand West  (Hands _ _ _ w) = w

@@ -1,5 +1,5 @@
-module Deal where
-import Bridge
+module Blackwood.Deal where
+import Blackwood.Bridge
 import System.Random
 
 -- Oh dang using a seed as input means we can totes replay hands :D
