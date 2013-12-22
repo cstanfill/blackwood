@@ -17,7 +17,6 @@ page path method = body << paragraph << result
             | (length chunks) == 2 = show board
             | (length chunks) == 3 = show $ getHand (read $ chunks !! 2) board
 
-
 cgiMain :: CGI CGIResult
 cgiMain = do 
 	path <- pathInfo
