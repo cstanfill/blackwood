@@ -15,8 +15,8 @@ data Bid' = Pass | Double | Redouble | Bid' Contract'
 data AlertLevel = Standard | Alert | Stop
 data Bid = Bid Player Bid' AlertLevel
 data Card = Card Value Suit deriving Eq
-data Doubledness = Undoubled | Doubled | Redoubled
-data Contract = NoContract | Contract Partnership Contract' Doubledness
+data Doubledness = Undoubled | Doubled | Redoubled deriving Show
+data Contract = NoContract | Contract Partnership Contract' Doubledness deriving Show
 data Hand = Hand [Card]
 data Board = Hands Hand Hand Hand Hand
 
@@ -84,3 +84,15 @@ getHand North (Hands n _ _ _) = n
 getHand East  (Hands _ e _ _) = e
 getHand South (Hands _ _ s _) = s
 getHand West  (Hands _ _ _ w) = w
+
+setHand :: Player -> Hand -> Board -> Board
+setHand North h (Hands n e s w) = Hands h e s w
+setHand East  h (Hands n e s w) = Hands n h s w
+setHand South h (Hands n e s w) = Hands n e h w
+setHand West  h (Hands n e s w) = Hands n e s h
+
+nextPlayer :: Player -> Player
+nextPlayer North = East
+nextPlayer East = South
+nextPlayer South = West
+nextPlayer West = North
