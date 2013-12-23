@@ -5,13 +5,13 @@ import Control.Monad.Error
 data BiddingError = DoublingError String | TooLowError Contract' Contract' | OtherError String
 
 instance Error BiddingError where
-    noMsg    = OtherError "Unknown (sorry!)"
-    strMsg s = OtherError s
+    noMsg  = OtherError "Unknown (sorry!)"
+    strMsg = OtherError
 
 instance Show BiddingError where
     show (DoublingError s)   = "You can't (re)double that: " ++ s
     show (TooLowError c1 c2) 
-        | c1 < c2   = "You bid too low: " ++ (show c1) ++ " is lower than " ++ (show c2)
+        | c1 < c2   = "You bid too low: " ++ show c1 ++ " is lower than " ++ show c2
         | otherwise = "Cannot rebid same contract"
     show (OtherError s) = "General error: " ++ s
 

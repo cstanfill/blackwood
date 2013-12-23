@@ -39,28 +39,28 @@ instance Show Value where
 -- :B
 instance Enum Card where
     toEnum i = Card (toEnum $ i `quot` 4) (toEnum $ i `rem` 4)
-    fromEnum (Card v s) = (fromEnum v) * 4 + (fromEnum s)
+    fromEnum (Card v s) = fromEnum v * 4 + fromEnum s
     enumFrom p = map toEnum [(fromEnum p)..51]
 
 instance Show Card where
-    show (Card v s) = (show v) ++ " of " ++ (show s)
+    show (Card v s) = show v ++ " of " ++ show s
 
 instance Show Hand where
     show (Hand cs) = intercalate "\n" $ map displaySuit $ reverse (enumFrom Clubs)
-        where displaySuit s = (nameSuit s) ++ ": " ++ intercalate " " (nameCards s)
+        where displaySuit s = nameSuit s ++ ": " ++ unwords (nameCards s)
               nameSuit Clubs = "C"
               nameSuit Hearts = "H"
               nameSuit Diamonds = "D"
               nameSuit Spades = "S"
               nameCards s = nameCards' $ map (\(Card v _) -> v) $ filter (\(Card _ s') -> s' == s) cs
               nameCards' [] = ["-"]
-              nameCards' xs = map show $ reverse $ sort xs
+              nameCards' xs = map show $ sortBy (flip compare) xs
 
 instance Show Board where
-    show (Hands n e s w) = "North:\n" ++ (show n) ++ "\n\n" ++
-                           "East:\n"  ++ (show e) ++ "\n\n" ++
-                           "South:\n" ++ (show s) ++ "\n\n" ++
-                           "West:\n"  ++ (show w) ++ "\n"
+    show (Hands n e s w) = "North:\n" ++ show n ++ "\n\n" ++
+                           "East:\n"  ++ show e ++ "\n\n" ++
+                           "South:\n" ++ show s ++ "\n\n" ++
+                           "West:\n"  ++ show w ++ "\n"
 
 partnership :: Player -> Partnership
 partnership p = case p of

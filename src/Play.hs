@@ -6,12 +6,12 @@ import Data.List
 
 data PlayError = TurnError Player Player | SuitError Suit Trick | HandError Player Card | OtherError String
 instance Error PlayError where
-    noMsg    = OtherError "Unknown (sorry!)"
-    strMsg s = OtherError s
+    noMsg  = OtherError "Unknown (sorry!)"
+    strMsg = OtherError
 instance Show PlayError where
-    show (TurnError p1 p2) = "Player " ++ (show p1) ++ " tried to play when it was " ++ (show p2) ++ "'s turn."
-    show (SuitError s t)   = "Tried to play a member of suit " ++ (show s) ++ " on trick " ++ (show t) ++ "."
-    show (HandError p c)   = "Player " ++ (show p) ++ " tried to play " ++ (show c) ++ " when it was not in their hand."
+    show (TurnError p1 p2) = "Player " ++ show p1 ++ " tried to play when it was " ++ show p2 ++ "'s turn."
+    show (SuitError s t)   = "Tried to play a member of suit " ++ show s ++ " on trick " ++ show t ++ "."
+    show (HandError p c)   = "Player " ++ show p ++ " tried to play " ++ show c ++ " when it was not in their hand."
     show (OtherError s) = "General error: " ++ s
 
 data Trick = Trick [(Player, Card)] deriving (Show)
@@ -35,7 +35,7 @@ history (Game _ _ _ _ h) = h
 
 suit :: Trick -> Maybe Suit
 suit (Trick []) = Nothing
-suit (Trick ((_,(Card _ s)):_)) = Just s
+suit (Trick ((_, Card _ s):_)) = Just s
 
 fullTrick :: Trick -> Bool
 fullTrick (Trick [_,_,_,_]) = True
@@ -52,23 +52,21 @@ playable (Card v s) t = playable' s (suit t)
 play :: Game -> Player -> Card -> Either Game PlayError
 play g p c 
     | p /= p'              = Right $ TurnError p p'
-    | not $ elem c h       = Right $ HandError p c
+    | c `notElem` h        = Right $ HandError p c
     | not $ c `playable` t = Right $ SuitError s t
     | otherwise            = Left $ Game b' contract (nextPlayer p) t'' hist'
         where (Game b contract p' t hist) = g
               (Hand h)     = getHand p b
               (Card _ s)   = c
               (Trick cs)   = t
-              b'           = setHand p (Hand $ delete c $ h) b
+              b'           = setHand p (Hand $ delete c h) b
               t'           = addCard t (p, c)
               (Plays ts)   = hist
-              hist'        = Plays $ case (fullTrick t') of True  -> ts ++ [t']
-                                                            False -> ts
-              t''          = case (fullTrick t') of True  ->  Trick []
-                                                    False -> t'
+              hist'        = Plays $ if fullTrick t' then ts ++ [t'] else ts
+              t''          = if fullTrick t' then Trick [] else t'
 
 ogre :: Game -> Bool 
-ogre (Game b _ _ _ _) = and $ map null [north, east, south, west]  -- IT'S OGRE
+ogre (Game b _ _ _ _) = all null [north, east, south, west]  -- IT'S OGRE
         where (Hand north) = getHand North b -- IT'S HAPPENING
               (Hand east ) = getHand East  b -- YOU COULD HAVE STOPPED THIS
               (Hand south) = getHand South b -- WHY DIDN'T YOU LISTEN

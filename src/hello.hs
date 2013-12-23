@@ -9,7 +9,7 @@ cgiMain :: CGI CGIResult
 cgiMain = do 
 	path <- pathInfo
 	method <- requestMethod
-	page' <- return (page path method)
+	let page' = page path method
 	output $ renderHtml page'
  
 main :: IO ()

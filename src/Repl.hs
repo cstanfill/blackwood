@@ -8,10 +8,10 @@ import Play
 import Deal
 import System.Random
 
-repl :: (Show a, Show c) => (a -> b -> (Either a c)) -> (String -> Maybe b) -> a -> IO ()
+repl :: (Show a, Show c) => (a -> b -> Either a c) -> (String -> Maybe b) -> a -> IO ()
 repl f parse init = do 
     z <- getLine
-    input <- return $ parse z
+    let input = parse z
     if isNothing input
         then
             do 
@@ -20,7 +20,7 @@ repl f parse init = do
         else 
             do 
                 (Just input') <- return input
-                newstate <- return $ f init input'
+                let newstate = f init input'
                 print newstate
                 either (repl f parse) (const $ repl f parse init) newstate
 parsePlay :: String -> Maybe (Player, Card)
@@ -72,6 +72,6 @@ play' g = uncurry $ play g
 
 main :: IO ()
 main = do
-    game <- return $ newGame 0
+    let game = newGame 0
     print game
     repl play' parsePlay game
