@@ -18,9 +18,7 @@ repl f parse init = do
         succeed a = do
             let newstate = f init a
             print newstate
-            repl f parse $ case newstate of
-                Left next -> next
-                Right _ -> init
+            repl f parse $ either id (const init) newstate
 
 parsePlay :: String -> Maybe (Player, Card)
 parsePlay (p:c) = (,) <$> parsePlayer [p] <*> parseCard c
