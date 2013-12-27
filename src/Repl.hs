@@ -11,18 +11,17 @@ import System.Random
 repl :: (Show a, Show c) => (a -> b -> Either a c) -> (String -> Maybe b) -> a -> IO ()
 repl f parse init = do 
     z <- getLine
-    let input = parse z
-    if isNothing input
-        then
-            do 
-                print "Parse error. Try again."
-                repl f parse init
-        else 
-            do 
-                (Just input') <- return input
-                let newstate = f init input'
-                print newstate
-                either (repl f parse) (const $ repl f parse init) newstate
+    maybe fail succeed (parse z) where
+        fail = do
+            print "Parse error. Try again."
+            repl f parse init
+        succeed a = do
+            let newstate = f init a
+            print newstate
+            repl f parse $ case newstate of
+                Left next -> next
+                Right _ -> init
+
 parsePlay :: String -> Maybe (Player, Card)
 parsePlay (p:c) = (,) <$> parsePlayer [p] <*> parseCard c
 parsePlay _     = Nothing
