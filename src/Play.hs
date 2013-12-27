@@ -44,16 +44,18 @@ fullTrick _  = False
 addCard :: Trick -> (Player, Card) -> Trick
 addCard (Trick cs) c = Trick (cs ++ [c])
 
-playable :: Card -> Trick -> Bool
-playable (Card v s) t = playable' s (suit t)
+-- the second argument is the cards in hand for playing player
+playable :: Card -> [Card] -> Trick -> Bool
+playable (Card v s) h t = playable' s (suit t)
     where playable' s Nothing = True
-          playable' s (Just s') = s' == s
+          playable' s (Just s') = (s' == s) || void s' h
+          void suit = not . any (\(Card _ s) -> s == suit)
 
 play :: Game -> Player -> Card -> Either Game PlayError
 play g p c 
     | p /= p'              = Right $ TurnError p p'
     | c `notElem` h        = Right $ HandError p c
-    | not $ c `playable` t = Right $ SuitError s t
+    | not $ playable c h t = Right $ SuitError s t
     | otherwise            = Left $ Game b' contract (nextPlayer p) t'' hist'
         where (Game b contract p' t hist) = g
               (Hand h)     = getHand p b
