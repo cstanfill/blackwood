@@ -24,7 +24,7 @@ repl f parse init = do
                 print newstate
                 either (repl f parse) (const $ repl f parse init) newstate
 parsePlay :: String -> Maybe (Player, Card)
-parsePlay (p:c) = (liftA2 . curry $ id) (parsePlayer [p]) $ parseCard c
+parsePlay (p:c) = (,) <$> parsePlayer [p] <*> parseCard c
 parsePlay _     = Nothing
 
 parsePlayer :: String -> Maybe Player
