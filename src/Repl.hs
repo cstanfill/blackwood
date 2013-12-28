@@ -29,6 +29,7 @@ parsePlayer "N" = Just North
 parsePlayer "E" = Just East
 parsePlayer "S" = Just South
 parsePlayer "W" = Just West
+parsePlayer _ = Nothing
 
 parseCard :: String -> Maybe Card
 parseCard [a,b,c] = liftA2 Card (parseValue [a,b]) (parseSuit [c])
