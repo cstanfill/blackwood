@@ -16,22 +16,14 @@ instance Show PlayError where
 
 data Trick = Trick [(Player, Card)] deriving (Show)
 data History = Plays [Trick] deriving (Show)
-data Game = Game Board Contract Player Trick History deriving (Show)
+data Game = Game { board :: Board
+                 , contract ::Contract
+                 , turn ::  Player
+                 , truck :: Trick
+                 , history :: History } deriving (Show)
 
 trump :: Game -> Trump
-trump (Game _ (Contract _ (Contract' _ t) _) _ _ _) = t
-
-turn :: Game -> Player
-turn (Game _ _ p _ _) = p
-
-trick :: Game -> Trick
-trick (Game _ _ _ t _) = t
-
-board :: Game -> Board
-board (Game b _ _ _ _) = b
-
-history :: Game -> History
-history (Game _ _ _ _ h) = h
+trump (Game _ (Contract _ (Contract' _ t) _) _ _ _) = t -- ... whatever
 
 suit :: Trick -> Maybe Suit
 suit (Trick []) = Nothing
@@ -67,9 +59,9 @@ play g p c
               hist'        = Plays $ if fullTrick t' then ts ++ [t'] else ts
               t''          = if fullTrick t' then Trick [] else t'
 
-ogre :: Game -> Bool 
-ogre (Game b _ _ _ _) = all null [north, east, south, west]  -- IT'S OGRE
-        where (Hand north) = getHand North b -- IT'S HAPPENING
-              (Hand east ) = getHand East  b -- YOU COULD HAVE STOPPED THIS
-              (Hand south) = getHand South b -- WHY DIDN'T YOU LISTEN
-              (Hand west ) = getHand West  b -- IT BEGINS
+over :: Game -> Bool
+over (Game b _ _ _ _) = all null [north, east, south, west]
+        where (Hand north) = getHand North b
+              (Hand east ) = getHand East  b
+              (Hand south) = getHand South b
+              (Hand west ) = getHand West  b
