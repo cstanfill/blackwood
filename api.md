@@ -34,15 +34,16 @@ not allowed to do the action. Logging in is not yet specified.
 Arrays are again in reversed-time order.
 
 ```
-GET '/games/[id]' => "NoSuchGame" | { "players": { "north" : Player, 
-                                                   "south" : Player, ... }, 
-                                    ( "player": "north"/... ,)
-                                    ( "bids": [ Bid, Bid, ... ],)
-                                    ( "trump": "spades"/..."notrump",)
-                                    ( "tricks": [ Trick, Trick, ...],)
-                                    ( "trick": [ Card, ...],)
-                                    }
+GET '/games/[id]' => { "players": { "north" : Player, 
+                                     "south" : Player, ... }, 
+                     ( "player": "north"/... ,)
+                     ( "bids": [ Bid, Bid, ... ],)
+                     ( "trump": "spades"/..."notrump",)
+                     ( "tricks": [ Trick, Trick, ...],)
+                     ( "trick": [ Card, ...],)
+                     } | 404 NOT FOUND "no such game"
 ```
+
 * "player" specifies whose turn it is to make a play / bid.
 * "players" only contains the players that have joined.
 * "bids" and "player" exist if and only if "players" is full.
@@ -59,6 +60,7 @@ POST '/games/[id]/bids' Bid => updated "bids" object | 409 CONFLICT error
 
 PUT '/games/[id]/trick/[n]' Card => new "trick" object | 409 CONFLICT error
 ```
+
 * The new trick object MUST contain the specified Card if it is valid.
 
 ```
@@ -66,6 +68,7 @@ POST '/games/[id]/trick/[n]' CARD => updated "trick" object | 409 CONFLICT error
 ```
 
 ## To do
-[ ] error bodies
-[ ] figure out auth
-[ ] figure out utils for tournament play (fixed seeds, restricted entry, etc)
+
+- error bodies
+- figure out auth
+- figure out utils for tournament play (fixed seeds, restricted entry, etc)
