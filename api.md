@@ -2,7 +2,6 @@
 This Markdown document specifies the API implemented by the blackwood bridge
 system. It is currently in a stage of early development and should not be taken
 as gospel.
-===============================================================================
 
 ## JSON Datatypes:
 
@@ -52,6 +51,7 @@ GET '/games/[id]' => "NoSuchGame" | { "players": { "north" : Player,
   submitted.
 * "trump" and "tricks" exist only if bidding has finished.
 * "trick" only exists if it is nonempty.
+
 ```
 POST '/games' => { "game": id }
 
@@ -60,9 +60,11 @@ POST '/games/[id]/bids' Bid => updated "bids" object | 409 CONFLICT error
 PUT '/games/[id]/trick/[n]' Card => new "trick" object | 409 CONFLICT error
 ```
 * The new trick object MUST contain the specified Card if it is valid.
+
 ```
 POST '/games/[id]/trick/[n]' CARD => updated "trick" object | 409 CONFLICT error
 ```
+
 ## To do
 [ ] error bodies
 [ ] figure out auth
