@@ -17,9 +17,9 @@ cabal-version:       >=1.8
 library
   exposed-modules:     Bridge, Bidding, Deal, Play
   -- other-modules:       
-  build-depends:       base ==4.6.*, random ==1.0.*, mtl ==2.1.*
+  build-depends:       base ==4.6.*, random ==1.0.*, mtl ==2.1.*, happstack-server >= 7.3.2
   hs-source-dirs:      src
 executable repl
   Main-is:             Repl.hs
-  build-depends:       base ==4.6.*, random ==1.0.*, mtl ==2.1.*
+  build-depends:       base ==4.6.*, random ==1.0.*, mtl ==2.1.*, happstack-server >= 7.3.2
   hs-source-dirs:      src
